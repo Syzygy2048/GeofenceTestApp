@@ -174,19 +174,33 @@ public class MainActivity extends AppCompatActivity {
                         Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build());
 
+/*
+        LocationServices.GeofencingApi.addGeofences(
+                googleApiClient,
+                getGeofencingRequest(),
+                getGeofencePendingIntentForBroadcast()
+        ).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                Toast.makeText(MainActivity.this, "geofences broadcast set - " + status, Toast.LENGTH_SHORT).show();
+
+                //startService(new Intent(MainActivity.this, GeofenceIntentService.class));
+            }
+        }); */
 
         LocationServices.GeofencingApi.addGeofences(
                 googleApiClient,
                 getGeofencingRequest(),
-                getGeofencePendingIntent()
+                getGeofencePendingIntentForService()
         ).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                Toast.makeText(MainActivity.this, "geofences set successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "geofences service set - " + status, Toast.LENGTH_SHORT).show();
 
                 startService(new Intent(MainActivity.this, GeofenceIntentService.class));
             }
         });
+
 
     }
 
@@ -197,15 +211,29 @@ public class MainActivity extends AppCompatActivity {
         return builder.build();
     }
 
-    private PendingIntent getGeofencePendingIntent() {
+    private PendingIntent getGeofencePendingIntentForService() {
      /*   // Reuse the PendingIntent if we already have it.
         if (mGeofencePendingIntent != null) {
             return mGeofencePendingIntent;
         } */
         Intent intent = new Intent(this, GeofenceIntentService.class);
+        intent.setAction("io.github.syzygy2048.geofencetestapp.ACTION_RECEIVE_GEOFENCE");
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
         // calling addGeofences() and removeGeofences().
         return PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+    }
+
+    private PendingIntent getGeofencePendingIntentForBroadcast() {
+     /*   // Reuse the PendingIntent if we already have it.
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        } */
+        Intent intent = new Intent(this, GeofenceIntentService.class);
+        intent.setAction("io.github.syzygy2048.geofencetestapp.ACTION_RECEIVE_GEOFENCE");
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
     }
 

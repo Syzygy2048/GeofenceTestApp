@@ -21,6 +21,12 @@
             </intent-filter>
         </activity>
         <service android:name=".GeofenceIntentService"/>
+        <receiver android:name=".GeofenceReceiver"
+            android:exported="false">
+            <intent-filter >
+                <action android:name="io.github.syzygy2048.geofencetestapp.ACTION_RECEIVE_GEOFENCE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

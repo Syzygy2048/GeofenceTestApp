@@ -1,9 +1,12 @@
 package io.github.syzygy2048.geofencetestapp;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
@@ -23,6 +26,19 @@ public class GeofenceIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+
+        final Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.btn_radio)
+                .setContentTitle("service triggered")
+                .setContentText("shit works")
+                .setAutoCancel(true)
+                .setLocalOnly(true)
+                .build();
+
+        notification.defaults |= Notification.DEFAULT_SOUND;
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
+
+        NotificationManagerCompat.from(this).notify(1, notification);
 
         String geofencingTransition = "";
         switch (geofencingEvent.getGeofenceTransition()){
