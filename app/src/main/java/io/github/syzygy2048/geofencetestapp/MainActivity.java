@@ -34,12 +34,18 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Geofence> geofenceList = new ArrayList<>();
     private GoogleApiClient googleApiClient;
 
+
+    private PendingIntent geofencePendingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        geofencePendingIntent = null;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -212,10 +218,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private PendingIntent getGeofencePendingIntentForService() {
-     /*   // Reuse the PendingIntent if we already have it.
-        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        } */
+        // Reuse the PendingIntent if we already have it.
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;       //this never gets set, this is exactly like in the sample code from google https://github.com/googlesamples/android-play-location/blob/master/Geofencing/app/src/main/java/com/google/android/gms/location/sample/geofencing/MainActivity.java#L217
+        }
         Intent intent = new Intent(this, GeofenceIntentService.class);
         intent.setAction("io.github.syzygy2048.geofencetestapp.ACTION_RECEIVE_GEOFENCE");
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
